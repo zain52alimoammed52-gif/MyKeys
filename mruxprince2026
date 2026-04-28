@@ -1,15 +1,19 @@
 <?php
-// مصفوفة المستخدمين (ID => الرمز)
+// مصفوفة المستخدمين
 $users = array(
     "5adaec08902ed212" => "PRINCE_1",
     "7e912c33a10b44f2" => "PRINCE_2"
 );
 
-// استلام البيانات عبر POST وتجاهل الحماية المؤقتة للاستضافة
+// السماح بالوصول وتحديد نوع الاستجابة
+header('Content-Type: text/plain; charset=utf-8');
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // استلام البيانات المشفرة من متغير auth
     $encodedData = isset($_POST['auth']) ? $_POST['auth'] : null;
 
     if ($encodedData) {
+        // فك تشفير Base64 القادم من التطبيق
         $decodedData = base64_decode($encodedData);
         $parts = explode('|', $decodedData);
         
@@ -20,15 +24,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (isset($users[$deviceID]) && $users[$deviceID] == $userKey) {
                 echo "نجاح";
             } else {
-                echo "فشل: بيانات غير مطابقة";
+                echo "بيانات غير مطابقة";
             }
         } else {
-            echo "فشل: تنسيق البيانات خاطئ";
+            echo "تنسيق بيانات خاطئ";
         }
     } else {
-        echo "NO_POST_DATA";
+        echo "لم يتم استلام بيانات";
     }
 } else {
-    echo "METHOD_NOT_ALLOWED";
+    echo "طريقة الاتصال غير مسموحة";
 }
 ?>
