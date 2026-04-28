@@ -1,24 +1,34 @@
 <?php
+// مصفوفة المستخدمين (ID => الرمز)
 $users = array(
     "5adaec08902ed212" => "PRINCE_1",
     "7e912c33a10b44f2" => "PRINCE_2"
 );
 
-// استلام البيانات عبر POST
-$encodedData = $_POST['auth'];
+// استلام البيانات عبر POST وتجاهل الحماية المؤقتة للاستضافة
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $encodedData = isset($_POST['auth']) ? $_POST['auth'] : null;
 
-if (isset($encodedData)) {
-    $decodedData = base64_decode($encodedData);
-    $parts = explode('|', $decodedData);
-    $deviceID = $parts[0];
-    $userKey = $parts[1];
+    if ($encodedData) {
+        $decodedData = base64_decode($encodedData);
+        $parts = explode('|', $decodedData);
+        
+        if (count($parts) == 2) {
+            $deviceID = $parts[0];
+            $userKey = $parts[1];
 
-    if (isset($users[$deviceID]) && $users[$deviceID] == $userKey) {
-        echo "نجاح";
+            if (isset($users[$deviceID]) && $users[$deviceID] == $userKey) {
+                echo "نجاح";
+            } else {
+                echo "فشل: بيانات غير مطابقة";
+            }
+        } else {
+            echo "فشل: تنسيق البيانات خاطئ";
+        }
     } else {
-        echo "فشل";
+        echo "NO_POST_DATA";
     }
 } else {
-    echo "NO_DATA";
+    echo "METHOD_NOT_ALLOWED";
 }
 ?>
