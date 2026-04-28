@@ -1,0 +1,18 @@
+<?php
+// قاعدة بيانات المشتركين (رقم الجهاز => رمز التفعيل الخاص به)
+$users = array(
+    "5adaec08902ed212" => "PRINCE_1",
+    "7e912c33a10b44f2" => "PRINCE_2",
+    "a1b2c3d4e5f6g7h8" => "PRINCE_3"
+);
+
+$deviceID = $_GET['id'];
+$userKey = $_GET['key'];
+
+// التأكد إذا كان الجهاز موجوداً والرمز مطابقاً له تماماً
+if (isset($users[$deviceID]) && $users[$deviceID] == $userKey) {
+    echo "SUCCESS";
+} else {
+    echo "FAILED";
+}
+?>
