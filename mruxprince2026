@@ -1,28 +1,22 @@
 <?php
-// قاعدة بيانات المشتركين (البيانات الحقيقية)
 $users = array(
     "5adaec08902ed212" => "PRINCE_1",
     "7e912c33a10b44f2" => "PRINCE_2"
 );
 
-// استلام البيانات المشفرة من الرابط
-$encodedData = $_GET['auth'];
+// استلام البيانات عبر POST
+$encodedData = $_POST['auth'];
 
 if (isset($encodedData)) {
-    // فك تشفير Base64
     $decodedData = base64_decode($encodedData);
-    
-    // تقسيم البيانات (نتوقع الصيغة: ID|KEY)
     $parts = explode('|', $decodedData);
-    
     $deviceID = $parts[0];
     $userKey = $parts[1];
 
-    // التحقق من المطابقة
     if (isset($users[$deviceID]) && $users[$deviceID] == $userKey) {
-        echo "SUCCESS";
+        echo "نجاح";
     } else {
-        echo "FAILED";
+        echo "فشل";
     }
 } else {
     echo "NO_DATA";
